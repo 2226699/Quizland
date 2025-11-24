@@ -8,7 +8,7 @@ import {
 } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
-import { Search, Bell } from "lucide-react";
+import { BookOpen, Search, Bell, Home, Book, FileText, User, Trophy, BarChart2, Clock, } from "lucide-react";
 
 import Quizzes from "./Quizzes";
 import CreateQuiz from "./CreateQuiz";
@@ -16,17 +16,16 @@ import NotesTask from "./NotesTask";
 
 
 export default function DashboardPage({ onLogout }) {
-  // 🔥 This fixes the white screen
   const [page, setPage] = useState("dashboard");
 
   return (
     <div className="min-h-screen flex bg-slate-50 text-slate-900">
       {/* Sidebar */}
-      <aside className="w-64 bg-white border-r border-slate-200 flex flex-col">
+      <aside className="w-64 bg-white border-r border-slate-200 flex flex-col h-screen sticky top-0">
         {/* Logo */}
-        <div className="h-16 flex items-center gap-3 px-6 border-b border-slate-200">
+       <div className="h-16 flex items-center gap-3 px-6 border-b border-slate-200">
           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-600 text-white">
-            <span className="text-lg font-semibold">📘</span>
+            <BookOpen className="h-5 w-5" />
           </div>
           <div>
             <p className="text-xs font-semibold tracking-wide text-slate-800">
@@ -37,30 +36,18 @@ export default function DashboardPage({ onLogout }) {
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 px-4 py-4 space-y-1 text-sm">
-          <SidebarItem
-            active={page === "dashboard"}
-            onClick={() => setPage("dashboard")}
-          >
+        <nav className="flex-1 px-4 py-4 space-y-2 bg-slate-50 dark:bg-slate-900 overflow-y-auto">
+          <SidebarItem icon={Home} active={page === "dashboard"} onClick={() => setPage("dashboard")}>
             Dashboard
           </SidebarItem>
-
-          <SidebarItem
-            active={page === "quizzes"}
-            onClick={() => setPage("quizzes")}
-          >
+          <SidebarItem icon={Book} active={page === "quizzes"} onClick={() => setPage("quizzes")}>
             Quizzes
           </SidebarItem>
-
-          <SidebarItem
-            active={page === "notesTasks"}
-            onClick={() => setPage("notesTasks")}
-          >
+          <SidebarItem icon={FileText} active={page === "notesTasks"} onClick={() => setPage("notesTasks")}>
             Notes & Tasks
           </SidebarItem>
-
-          <SidebarItem>Leaderboard</SidebarItem>
-          <SidebarItem>Profile</SidebarItem>
+          <SidebarItem icon={Trophy}>Leaderboard</SidebarItem>
+          <SidebarItem icon={User}>Profile</SidebarItem>
         </nav>
 
         {/* Footer */}
@@ -70,6 +57,7 @@ export default function DashboardPage({ onLogout }) {
           </p>
         </div>
       </aside>
+
 
       {/* Main content */}
       <main className="flex-1 flex flex-col">
@@ -112,7 +100,7 @@ export default function DashboardPage({ onLogout }) {
           </div>
         </header>
 
-        {/* 🔥 DYNAMIC PAGE AREA */}
+        {/* DYNAMIC PAGE AREA */}
         <div className="flex-1 overflow-y-auto">
 
           {/* DASHBOARD PAGE */}
@@ -138,27 +126,28 @@ export default function DashboardPage({ onLogout }) {
                     label="Completed Quizzes"
                     value="12"
                     subtext="Quizzes"
-                    icon="📘"
+                    icon={Book}
+                    accent="bg-blue-50 text-blue-600"
                   />
                   <StatCard
                     label="Average Score"
                     value="85%"
                     subtext="Last 30 days"
-                    icon="📊"
+                    icon={BarChart2}
                     accent="bg-emerald-50 text-emerald-600"
                   />
                   <StatCard
                     label="Rank"
                     value="5th"
                     subtext="In your cohort"
-                    icon="🏆"
+                    icon={Trophy}
                     accent="bg-amber-50 text-amber-600"
                   />
                   <StatCard
                     label="Study Time"
                     value="8.2 hrs"
                     subtext="This week"
-                    icon="⏱️"
+                    icon={Clock}
                     accent="bg-violet-50 text-violet-600"
                   />
                 </div>
@@ -282,23 +271,23 @@ export default function DashboardPage({ onLogout }) {
 
 /* ===== SMALL COMPONENTS ===== */
 
-function SidebarItem({ children, active, onClick }) {
+function SidebarItem({ children, icon: Icon, active, onClick }) {
   return (
     <button
       onClick={onClick}
-      className={`w-full flex items-center rounded-lg px-3 py-2 text-left transition text-xs
-        ${
-          active
-            ? "bg-slate-900 text-white"
-            : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+      className={`w-full flex items-center rounded-lg px-3 py-2 text-left transition text-sm
+        ${active 
+          ? "bg-slate-900 text-white dark:bg-slate-700" 
+          : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white"
         }`}
     >
+      {Icon && <Icon className="w-5 h-5 mr-3" />}
       {children}
     </button>
   );
 }
 
-function StatCard({ label, value, subtext, icon, accent }) {
+function StatCard({ label, value, subtext, icon: Icon, accent }) {
   return (
     <Card className="border-none shadow-sm">
       <CardContent className="pt-4 flex items-center justify-between">
@@ -308,11 +297,11 @@ function StatCard({ label, value, subtext, icon, accent }) {
           <p className="text-[10px] text-slate-400 mt-1">{subtext}</p>
         </div>
         <div
-          className={`h-9 w-9 rounded-xl flex items-center justify-center text-sm ${
+          className={`h-9 w-9 rounded-xl flex items-center justify-center ${
             accent || "bg-blue-50 text-blue-600"
           }`}
         >
-          {icon}
+          {Icon && <Icon className="w-5 h-5" />}
         </div>
       </CardContent>
     </Card>
