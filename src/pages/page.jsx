@@ -12,6 +12,8 @@ import { Search, Bell } from "lucide-react";
 
 import Quizzes from "./Quizzes";
 import CreateQuiz from "./CreateQuiz";
+import NotesTask from "./NotesTask";
+
 
 export default function DashboardPage({ onLogout }) {
   // 🔥 This fixes the white screen
@@ -50,7 +52,13 @@ export default function DashboardPage({ onLogout }) {
             Quizzes
           </SidebarItem>
 
-          <SidebarItem>Notes & Tasks</SidebarItem>
+          <SidebarItem
+            active={page === "notesTasks"}
+            onClick={() => setPage("notesTasks")}
+          >
+            Notes & Tasks
+          </SidebarItem>
+
           <SidebarItem>Leaderboard</SidebarItem>
           <SidebarItem>Profile</SidebarItem>
         </nav>
@@ -265,6 +273,7 @@ export default function DashboardPage({ onLogout }) {
 {page === "quizzes" && <Quizzes onCreate={() => setPage("createQuiz")} />}
 
 {page === "createQuiz" && <CreateQuiz />}
+{page === "notesTasks" && <NotesTask />}
         </div>
       </main>
     </div>
