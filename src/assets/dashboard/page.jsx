@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Card,
   CardHeader,
@@ -8,13 +9,17 @@ import {
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { Search, Bell } from "lucide-react";
+import Quizzes from "./Quizzes"; // <-- your CreateQuiz page
 
 export default function DashboardPage({ onLogout }) {
+  // 🔥 This fixes the white screen
+  const [page, setPage] = useState("dashboard");
+
   return (
     <div className="min-h-screen flex bg-slate-50 text-slate-900">
       {/* Sidebar */}
       <aside className="w-64 bg-white border-r border-slate-200 flex flex-col">
-        {/* Logo / brand */}
+        {/* Logo */}
         <div className="h-16 flex items-center gap-3 px-6 border-b border-slate-200">
           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-600 text-white">
             <span className="text-lg font-semibold">📘</span>
@@ -29,9 +34,21 @@ export default function DashboardPage({ onLogout }) {
 
         {/* Navigation */}
         <nav className="flex-1 px-4 py-4 space-y-1 text-sm">
-          <SidebarItem active>Dashboard</SidebarItem>
-          <SidebarItem>Quizzes</SidebarItem>
-          <SidebarItem>Tracks &amp; Tasks</SidebarItem>
+          <SidebarItem
+            active={page === "dashboard"}
+            onClick={() => setPage("dashboard")}
+          >
+            Dashboard
+          </SidebarItem>
+
+          <SidebarItem
+            active={page === "quizzes"}
+            onClick={() => setPage("quizzes")}
+          >
+            Quizzes
+          </SidebarItem>
+
+          <SidebarItem>Tracks & Tasks</SidebarItem>
           <SidebarItem>Leaderboard</SidebarItem>
           <SidebarItem>Profile</SidebarItem>
         </nav>
@@ -63,7 +80,7 @@ export default function DashboardPage({ onLogout }) {
               <Bell className="h-4 w-4 text-slate-500" />
             </button>
 
-            {/* Logout button */}
+            {/* Logout */}
             <Button
               variant="outline"
               size="sm"
@@ -85,169 +102,182 @@ export default function DashboardPage({ onLogout }) {
           </div>
         </header>
 
-        {/* Content area */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-6">
-          {/* Welcome + stat cards */}
-          <section className="space-y-4">
-            <div>
-              <p className="text-xs text-slate-500">
-                Welcome back,{" "}
-                <span className="font-semibold text-slate-800">
-                  Carlos Optimal
-                </span>
-              </p>
-              <h1 className="text-xl font-semibold mt-1">
-                Ready to continue learning journey
-              </h1>
-            </div>
+        {/* 🔥 DYNAMIC PAGE AREA */}
+        <div className="flex-1 overflow-y-auto">
 
-            <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
-              <StatCard
-                label="Completed Quizzes"
-                value="12"
-                subtext="Quizzes"
-                icon="📘"
-              />
-              <StatCard
-                label="Average Score"
-                value="85%"
-                subtext="Last 30 days"
-                icon="📊"
-                accent="bg-emerald-50 text-emerald-600"
-              />
-              <StatCard
-                label="Rank"
-                value="5th"
-                subtext="In your cohort"
-                icon="🏆"
-                accent="bg-amber-50 text-amber-600"
-              />
-              <StatCard
-                label="Study Time"
-                value="8.2 hrs"
-                subtext="This week"
-                icon="⏱️"
-                accent="bg-violet-50 text-violet-600"
-              />
-            </div>
-          </section>
-
-          {/* Progress + Activity + Lists */}
-          <section className="grid gap-6 lg:grid-cols-3">
-            {/* Left side: progress + available quizzes */}
-            <div className="space-y-6 lg:col-span-2">
-              <Card>
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-sm">Current Progress</CardTitle>
-                  <CardDescription className="text-xs">
-                    Module 2: Data Structures
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-2">
-                  <div className="h-2 w-full rounded-full bg-slate-100 overflow-hidden">
-                    <div
-                      className="h-full bg-blue-600 rounded-full"
-                      style={{ width: "63%" }}
-                    />
-                  </div>
-                  <p className="text-[11px] text-slate-500">
-                    63% completed • 8/12 lessons finished
+          {/* DASHBOARD PAGE */}
+          {page === "dashboard" && (
+            <div className="p-6 space-y-6">
+              {/* Welcome */}
+              <section className="space-y-4">
+                <div>
+                  <p className="text-xs text-slate-500">
+                    Welcome back,{" "}
+                    <span className="font-semibold text-slate-800">
+                      Carlos Optimal
+                    </span>
                   </p>
-                </CardContent>
-              </Card>
+                  <h1 className="text-xl font-semibold mt-1">
+                    Ready to continue learning journey
+                  </h1>
+                </div>
 
-              <Card>
-                <CardHeader className="pb-3 flex flex-row items-center justify-between">
-                  <div>
-                    <CardTitle className="text-sm">Available Quizzes</CardTitle>
-                    <CardDescription className="text-xs">
-                      Continue where you left off
-                    </CardDescription>
-                  </div>
-                  <Button variant="ghost" className="h-7 px-2 text-[11px]">
-                    View All
-                  </Button>
-                </CardHeader>
-                <CardContent className="space-y-3 text-xs">
-                  <QuizRow
-                    color="border-blue-500"
-                    title="ICT Foundation"
-                    info="12 lessons • 30 mins per quiz"
-                    difficulty="Easy"
+                {/* Stats */}
+                <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+                  <StatCard
+                    label="Completed Quizzes"
+                    value="12"
+                    subtext="Quizzes"
+                    icon="📘"
                   />
-                  <QuizRow
-                    color="border-emerald-500"
-                    title="Programming Logic"
-                    info="10 lessons • 25 mins per quiz"
-                    difficulty="Medium"
+                  <StatCard
+                    label="Average Score"
+                    value="85%"
+                    subtext="Last 30 days"
+                    icon="📊"
+                    accent="bg-emerald-50 text-emerald-600"
                   />
-                  <QuizRow
-                    color="border-violet-500"
-                    title="Database Systems"
-                    info="8 lessons • 35 mins per quiz"
-                    difficulty="Hard"
+                  <StatCard
+                    label="Rank"
+                    value="5th"
+                    subtext="In your cohort"
+                    icon="🏆"
+                    accent="bg-amber-50 text-amber-600"
                   />
-                </CardContent>
-              </Card>
+                  <StatCard
+                    label="Study Time"
+                    value="8.2 hrs"
+                    subtext="This week"
+                    icon="⏱️"
+                    accent="bg-violet-50 text-violet-600"
+                  />
+                </div>
+              </section>
+
+              {/* Progress + Lists */}
+              <section className="grid gap-6 lg:grid-cols-3">
+                <div className="space-y-6 lg:col-span-2">
+                  <Card>
+                    <CardHeader className="pb-3">
+                      <CardTitle className="text-sm">Current Progress</CardTitle>
+                      <CardDescription className="text-xs">
+                        Module 2: Data Structures
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-2">
+                      <div className="h-2 w-full rounded-full bg-slate-100 overflow-hidden">
+                        <div
+                          className="h-full bg-blue-600 rounded-full"
+                          style={{ width: "63%" }}
+                        />
+                      </div>
+                      <p className="text-[11px] text-slate-500">
+                        63% completed • 8/12 lessons finished
+                      </p>
+                    </CardContent>
+                  </Card>
+
+                  <Card>
+                    <CardHeader className="pb-3 flex flex-row items-center justify-between">
+                      <div>
+                        <CardTitle className="text-sm">Available Quizzes</CardTitle>
+                        <CardDescription className="text-xs">
+                          Continue where you left off
+                        </CardDescription>
+                      </div>
+                      <Button variant="ghost" className="h-7 px-2 text-[11px]">
+                        View All
+                      </Button>
+                    </CardHeader>
+                    <CardContent className="space-y-3 text-xs">
+                      <QuizRow
+                        color="border-blue-500"
+                        title="ICT Foundation"
+                        info="12 lessons • 30 mins per quiz"
+                        difficulty="Easy"
+                      />
+                      <QuizRow
+                        color="border-emerald-500"
+                        title="Programming Logic"
+                        info="10 lessons • 25 mins per quiz"
+                        difficulty="Medium"
+                      />
+                      <QuizRow
+                        color="border-violet-500"
+                        title="Database Systems"
+                        info="8 lessons • 35 mins per quiz"
+                        difficulty="Hard"
+                      />
+                    </CardContent>
+                  </Card>
+                </div>
+
+                {/* Right */}
+                <div className="space-y-6">
+                  <Card>
+                    <CardHeader className="pb-3">
+                      <CardTitle className="text-sm">Recent Activity</CardTitle>
+                      <CardDescription className="text-xs">
+                        Your latest learning actions
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-2 text-[11px]">
+                      <ActivityItem text="Completed ICT Basics" ago="2 hrs ago" />
+                      <ActivityItem
+                        text="New badge earned: Rank improved"
+                        ago="1 day ago"
+                      />
+                      <ActivityItem
+                        text="Completed 3 practice quizzes"
+                        ago="3 days ago"
+                      />
+                    </CardContent>
+                  </Card>
+
+                  <Card>
+                    <CardHeader className="pb-3 flex flex-row items-center justify-between">
+                      <div>
+                        <CardTitle className="text-sm">Top Performers</CardTitle>
+                        <CardDescription className="text-xs">
+                          Based on average score
+                        </CardDescription>
+                      </div>
+                      <Button variant="ghost" className="h-7 px-2 text-[11px]">
+                        View All
+                      </Button>
+                    </CardHeader>
+                    <CardContent className="space-y-2 text-[11px]">
+                      <TopPerformer rank={1} name="Gonzalez, Miles" score="96%" />
+                      <TopPerformer rank={2} name="Ortiz, Kevin" score="93%" />
+                      <TopPerformer rank={3} name="Velasquez, Kara" score="91%" />
+                      <TopPerformer rank={4} name="Yanez, Auron" score="89%" />
+                    </CardContent>
+                  </Card>
+                </div>
+              </section>
             </div>
+          )}
 
-            {/* Right side: activity + top performers */}
-            <div className="space-y-6">
-              <Card>
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-sm">Recent Activity</CardTitle>
-                  <CardDescription className="text-xs">
-                    Your latest learning actions
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-2 text-[11px]">
-                  <ActivityItem text="Completed ICT Basics" ago="2 hrs ago" />
-                  <ActivityItem
-                    text="New badge earned: Rank improved"
-                    ago="1 day ago"
-                  />
-                  <ActivityItem
-                    text="Completed 3 practice quizzes"
-                    ago="3 days ago"
-                  />
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader className="pb-3 flex flex-row items-center justify-between">
-                  <div>
-                    <CardTitle className="text-sm">Top Performers</CardTitle>
-                    <CardDescription className="text-xs">
-                      Based on average score
-                    </CardDescription>
-                  </div>
-                  <Button variant="ghost" className="h-7 px-2 text-[11px]">
-                    View All
-                  </Button>
-                </CardHeader>
-                <CardContent className="space-y-2 text-[11px]">
-                  <TopPerformer rank={1} name="Gonzalez, Miles" score="96%" />
-                  <TopPerformer rank={2} name="Ortiz, Kevin" score="93%" />
-                  <TopPerformer rank={3} name="Velasquez, Kara" score="91%" />
-                  <TopPerformer rank={4} name="Yanez, Auron" score="89%" />
-                </CardContent>
-              </Card>
-            </div>
-          </section>
+          {/* QUIZZES PAGE */}
+          {page === "quizzes" && <Quizzes />}
         </div>
       </main>
     </div>
   );
 }
 
-/* === Small reusable pieces === */
+/* ===== SMALL COMPONENTS ===== */
 
-function SidebarItem({ children, active }) {
+function SidebarItem({ children, active, onClick }) {
   return (
     <button
-      className={`w-full flex items-center rounded-lg px-3 py-2 text-left transition text-slate-600 hover:bg-slate-100 hover:text-slate-900 text-xs ${
-        active ? "bg-slate-900 text-white" : ""
-      }`}
+      onClick={onClick}
+      className={`w-full flex items-center rounded-lg px-3 py-2 text-left transition text-xs
+        ${
+          active
+            ? "bg-slate-900 text-white"
+            : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+        }`}
     >
       {children}
     </button>
