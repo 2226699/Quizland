@@ -18,7 +18,8 @@ import {
 } from "../../components/ui/tabs";
 import { Eye, EyeOff } from "lucide-react";
 
-export default function RegisterLoginPage() {
+// ✅ now accepts onAuthSuccess from parent (App.jsx)
+export default function RegisterLoginPage({ onAuthSuccess }) {
   const [mode, setMode] = useState("register");
 
   return (
@@ -64,10 +65,11 @@ export default function RegisterLoginPage() {
             </TabsList>
 
             <TabsContent value="login">
-              <AuthForm mode="login" />
+              {/* ✅ pass onAuthSuccess to the form */}
+              <AuthForm mode="login" onAuthSuccess={onAuthSuccess} />
             </TabsContent>
             <TabsContent value="register">
-              <AuthForm mode="register" />
+              <AuthForm mode="register" onAuthSuccess={onAuthSuccess} />
             </TabsContent>
           </Tabs>
         </CardContent>
@@ -77,15 +79,27 @@ export default function RegisterLoginPage() {
 }
 
 // Form component used for both login and register modes
-function AuthForm({ mode }) {
+function AuthForm({ mode, onAuthSuccess }) {
   const isRegister = mode === "register";
 
   // Local state for show / hide password
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
+  // ✅ handle submit for both Login and Register
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    // TODO later: validate inputs + call backend API here
+
+    // For now, just pretend auth succeeded and go to dashboard
+    if (onAuthSuccess) {
+      onAuthSuccess();
+    }
+  };
+
   return (
-    <form className="space-y-4 text-sm">
+    <form className="space-y-4 text-sm" onSubmit={handleSubmit}>
       {isRegister && (
         <div className="space-y-1">
           <Label htmlFor="username">Username</Label>
