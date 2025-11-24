@@ -4,7 +4,7 @@ import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
 
-export default function CreateQuiz() {
+export default function CreateQuiz({ onSave }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [difficulty, setDifficulty] = useState("Medium");
@@ -12,6 +12,8 @@ export default function CreateQuiz() {
   const [questions, setQuestions] = useState([
     { id: 1, text: "", options: ["", "", "", ""], correct: 0 },
   ]);
+
+  const [success, setSuccess] = useState(false);
 
   const resetForm = () => {
     setTitle("");
@@ -33,10 +35,9 @@ export default function CreateQuiz() {
     ]);
   };
 
-  const updateQuestion = (index, field, value) => {
+  const updateQuestion = (qIndex, field, value) => {
     const updated = [...questions];
-    if (field === "text") updated[index].text = value;
-    if (field === "correct") updated[index].correct = value;
+    updated[qIndex][field] = value;
     setQuestions(updated);
   };
 
@@ -46,9 +47,39 @@ export default function CreateQuiz() {
     setQuestions(updated);
   };
 
+  const handleSave = () => {
+    const quiz = {
+      id: Date.now(),
+      title,
+      description,
+      difficulty,
+      duration,
+      questions,
+    };
+
+    const existing = JSON.parse(localStorage.getItem("quizzes") || "[]");
+    existing.push(quiz);
+
+    localStorage.setItem("quizzes", JSON.stringify(existing));
+
+    setSuccess(true);
+
+    setTimeout(() => {
+      setSuccess(false);
+      onSave(); // redirect to quizzes homepage
+    }, 1200);
+  };
+
   return (
     <div className="min-h-full flex flex-col bg-slate-50 text-slate-900">
-      {/* Page title */}
+
+      {/* Success Banner */}
+      {success && (
+        <div className="w-full bg-green-600 text-white text-center py-2 text-sm">
+          ✔ Quiz saved successfully!
+        </div>
+      )}
+
       <header className="h-16 flex items-center justify-between border-b border-slate-200 bg-white px-6">
         <div>
           <h1 className="text-lg font-semibold">Create New Quiz</h1>
@@ -58,11 +89,12 @@ export default function CreateQuiz() {
           <Button variant="outline" className="text-xs" onClick={resetForm}>
             Cancel
           </Button>
-          <Button className="bg-green-600 hover:bg-green-700 text-xs">Save Quiz</Button>
+          <Button className="bg-green-600 hover:bg-green-700 text-xs" onClick={handleSave}>
+            Save Quiz
+          </Button>
         </div>
       </header>
 
-      {/* Content */}
       <div className="p-6 space-y-6 overflow-y-auto">
         {/* Quiz Info */}
         <Card className="p-6">
@@ -72,20 +104,12 @@ export default function CreateQuiz() {
           <CardContent className="space-y-4 text-sm">
             <div>
               <Label>Quiz Title</Label>
-              <Input
-                placeholder="e.g. Advanced Programming Concepts"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-              />
+              <Input value={title} onChange={(e) => setTitle(e.target.value)} />
             </div>
 
             <div>
               <Label>Description</Label>
-              <Input
-                placeholder="Brief description of what this quiz covers"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-              />
+              <Input value={description} onChange={(e) => setDescription(e.target.value)} />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
@@ -95,11 +119,7 @@ export default function CreateQuiz() {
               </div>
               <div>
                 <Label>Duration (minutes)</Label>
-                <Input
-                  type="number"
-                  value={duration}
-                  onChange={(e) => setDuration(e.target.value)}
-                />
+                <Input type="number" value={duration} onChange={(e) => setDuration(e.target.value)} />
               </div>
             </div>
           </CardContent>
@@ -121,26 +141,22 @@ export default function CreateQuiz() {
             <CardContent className="space-y-4 text-sm">
               <div>
                 <Label>Question Text</Label>
-                <Input
-                  placeholder="Enter your questions here"
-                  value={q.text}
-                  onChange={(e) => updateQuestion(qi, "text", e.target.value)}
-                />
+                <Input value={q.text} onChange={(e) => updateQuestion(qi, "text", e.target.value)} />
               </div>
 
               <div className="space-y-2">
                 <Label>Answer Options</Label>
                 {q.options.map((opt, oi) => (
-                  <div key={oi} className="flex items-center gap-2">
+                  <div className="flex items-center gap-2" key={oi}>
                     <input
                       type="radio"
                       checked={q.correct === oi}
                       onChange={() => updateQuestion(qi, "correct", oi)}
                     />
                     <Input
-                      placeholder={`Option ${String.fromCharCode(65 + oi)}`}
                       value={opt}
                       onChange={(e) => updateOption(qi, oi, e.target.value)}
+                      placeholder={`Option ${String.fromCharCode(65 + oi)}`}
                     />
                   </div>
                 ))}
