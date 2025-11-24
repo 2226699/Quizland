@@ -1,16 +1,10 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+// src/App.jsx
+import RegisterLoginPage from "./assets/registerLogin/page.jsx";
 
 function App() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-900">
-      <h1 className="text-4xl font-bold text-white">
-        Hello Tailwind 👋
-      </h1>
-    </div>
-  )
+    <RegisterLoginPage />
+  );
 }
 
-export default App
+export default App;
