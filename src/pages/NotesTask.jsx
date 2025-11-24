@@ -4,17 +4,26 @@ import { Input } from "../components/ui/input";
 import { Search, Edit2, Trash2 } from "lucide-react";
 import CreateNoteModal from "../components/CreateNoteModal";
 import EditNoteModal from "../components/EditNoteModal";
+import CreateTaskModal from "../components/CreateTaskModal";
 
 export default function NotesTask() {
-  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showCreateNoteModal, setShowCreateNoteModal] = useState(false);
   const [editingNote, setEditingNote] = useState(null);
   const [notes, setNotes] = useState(() => {
     return JSON.parse(localStorage.getItem("notes") || "[]");
-});
+  });
+
+  const [showCreateTaskModal, setShowCreateTaskModal] = useState(false);
+  const [tasks, setTasks] = useState(() => JSON.parse(localStorage.getItem("tasks") || "[]"));
 
   useEffect(() => {
     localStorage.setItem("notes", JSON.stringify(notes));
   }, [notes]);
+
+  useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }, [tasks]);
+
 
   const handleSaveNote = (newNote) => {
     setNotes((prev) => [...prev, newNote]);
@@ -29,6 +38,13 @@ export default function NotesTask() {
   const handleDeleteNote = (id) => {
     setNotes((prev) => prev.filter((note) => note.id !== id));
   };
+
+  const handleSaveTask = (newTask) => setTasks((prev) => [...prev, newTask]);
+  const handleToggleTask = (id) =>
+    setTasks((prev) =>
+      prev.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t))
+    );
+  const handleDeleteTask = (id) => setTasks((prev) => prev.filter((t) => t.id !== id));
 
   return (
     <div className="min-h-full bg-slate-50 text-slate-900">
@@ -56,11 +72,11 @@ export default function NotesTask() {
                 <h3 className="text-sm font-semibold">Study Notes</h3>
                 <div className="flex gap-2">
                 <Button
-                    size="sm"
-                    className="text-xs h-7 px-3"
-                    onClick={() => setShowCreateModal(true)}
+                  size="sm"
+                  className="text-xs h-7 px-3"
+                  onClick={() => setShowCreateNoteModal(true)}
                 >
-                    + Add Note
+                  + Add Note
                 </Button>
                 <Button
                     size="sm"
@@ -110,48 +126,94 @@ export default function NotesTask() {
             </div>
         </div>
 
-        {/* Right: Tasks */}
-        <div className="space-y-4">
-          <div className="flex justify-between items-center">
-            <h3 className="text-sm font-semibold">Tasks</h3>
-            <div className="flex items-center gap-2">
-              <span className="text-xs bg-gray-200 text-gray-700 px-2 py-0.5 rounded-full">
-                1/4 Done
-              </span>
-              <Button size="sm" className="text-xs h-7 px-3">
+         {/* Tasks Column */}
+          <div className="space-y-4">
+            <div className="flex justify-between items-center mb-2">
+              <h3 className="text-sm font-semibold">Tasks</h3>
+              <Button
+                size="sm"
+                className="text-xs h-7 px-3"
+                onClick={() => setShowCreateTaskModal(true)}
+              >
                 + Add Task
               </Button>
             </div>
-          </div>
 
-          <div className="space-y-3">
-            <div className="p-4 bg-white rounded-xl shadow border border-slate-200 flex justify-between items-center">
-              <span className="text-xs text-slate-500">Sample Task 1</span>
-              <input type="checkbox" />
-            </div>
-            <div className="p-4 bg-white rounded-xl shadow border border-slate-200 flex justify-between items-center">
-              <span className="text-xs text-slate-500">Sample Task 2</span>
-              <input type="checkbox" />
+            <div className="max-h-[700px] overflow-y-auto space-y-3">
+              {tasks.length > 0 ? (
+                tasks.map((task) => (
+                  <div
+                    key={task.id}
+                    className="p-4 bg-white rounded-xl shadow border border-slate-200 flex justify-between items-start"
+                  >
+                    <div className="flex-1 space-y-1">
+                      {/* Title */}
+                      <span
+                        className={`text-xs font-semibold capitalize ${
+                          task.completed ? "line-through text-gray-400" : ""
+                        }`}
+                      >
+                        {task.title}
+                      </span>
+
+                      {/* Description */}
+                      {task.description && (
+                        <p className="text-xs text-slate-500 mt-1">{task.description}</p>
+                      )}
+
+                      {/* Priority + Due Date */}
+                      <div className="flex items-center justify-start gap-3 mt-2">
+                        {task.priority && (
+                          <span
+                            className={`text-[10px] px-3 py-1 rounded-full font-medium ${
+                              task.priority === "high"
+                                ? "bg-red-100 text-red-700"
+                                : task.priority === "medium"
+                                ? "bg-yellow-100 text-yellow-700"
+                                : "bg-green-100 text-green-700"
+                            }`}
+                          >
+                            {task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}
+                          </span>
+                        )}
+                        {task.dueDate && (
+                          <span className="text-[10px] text-slate-500">
+                            Due: {new Date(task.dueDate).toLocaleDateString()}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Checkbox + Delete */}
+                    <div className="flex gap-1 mt-1">
+                      <input
+                        type="checkbox"
+                        checked={task.completed}
+                        onChange={() => handleToggleTask(task.id)}
+                      />
+                      <button
+                        className="p-1 hover:bg-red-100 rounded"
+                        onClick={() => handleDeleteTask(task.id)}
+                      >
+                        <Trash2 className="h-4 w-4 text-red-600" />
+                      </button>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p className="text-xs text-slate-500">No tasks yet. Click "+ Add Task" to start.</p>
+              )}
             </div>
           </div>
-        </div>
       </div>
 
+      
       {/* Modals */}
-      {showCreateModal && (
-        <CreateNoteModal
-          onClose={() => setShowCreateModal(false)}
-          onSave={handleSaveNote}
-        />
+      {showCreateNoteModal && (
+        <CreateNoteModal onClose={() => setShowCreateNoteModal(false)} onSave={handleSaveNote} />
       )}
-
-      {editingNote && (
-        <EditNoteModal
-          note={editingNote}
-          onClose={() => setEditingNote(null)}
-          onSave={handleUpdateNote}
-        />
-      )}
+      {editingNote && <EditNoteModal note={editingNote} onClose={() => setEditingNote(null)} onSave={handleUpdateNote} />}
+      {showCreateTaskModal && <CreateTaskModal onClose={() => setShowCreateTaskModal(false)} onSave={handleSaveTask} />}
     </div>
   );
 }
