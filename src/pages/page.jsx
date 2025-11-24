@@ -5,12 +5,13 @@ import {
   CardTitle,
   CardDescription,
   CardContent,
-} from "../../components/ui/card";
-import { Button } from "../../components/ui/button";
-import { Input } from "../../components/ui/input";
+} from "../components/ui/card";
+import { Button } from "../components/ui/button";
+import { Input } from "../components/ui/input";
 import { Search, Bell } from "lucide-react";
-import Quizzes from "./Quizzes"; // <-- your Homepage Quiz page
-import CreateQuiz from "./CreateQuiz"; // <-- your CreateQuiz page 
+
+import Quizzes from "./Quizzes";
+import CreateQuiz from "./CreateQuiz";
 
 export default function DashboardPage({ onLogout }) {
   // 🔥 This fixes the white screen
@@ -49,7 +50,7 @@ export default function DashboardPage({ onLogout }) {
             Quizzes
           </SidebarItem>
 
-          <SidebarItem>Tracks & Tasks</SidebarItem>
+          <SidebarItem>Notes & Tasks</SidebarItem>
           <SidebarItem>Leaderboard</SidebarItem>
           <SidebarItem>Profile</SidebarItem>
         </nav>

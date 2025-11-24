@@ -1,6 +1,6 @@
 import { useState } from "react";
-import RegisterLoginPage from "./assets/registerLogin/page.jsx";
-import DashboardPage from "./assets/dashboard/page.jsx";
+import RegisterLoginPage from "./pages/auth.jsx";
+import DashboardPage from "./pages/page.jsx";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);

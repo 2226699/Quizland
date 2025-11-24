@@ -6,16 +6,16 @@ import {
   CardTitle,
   CardDescription,
   CardContent,
-} from "../../components/ui/card";
-import { Button } from "../../components/ui/button";
-import { Input } from "../../components/ui/input";
-import { Label } from "../../components/ui/label";
+} from "../components/ui/card";
+import { Button } from "../components/ui/button";
+import { Input } from "../components/ui/input";
+import { Label } from "../components/ui/label";
 import {
   Tabs,
   TabsList,
   TabsTrigger,
   TabsContent,
-} from "../../components/ui/tabs";
+} from "../components/ui/tabs";
 import { Eye, EyeOff } from "lucide-react";
 
 // ✅ now accepts onAuthSuccess from parent (App.jsx)
