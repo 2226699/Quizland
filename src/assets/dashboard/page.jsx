@@ -9,7 +9,8 @@ import {
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { Search, Bell } from "lucide-react";
-import Quizzes from "./Quizzes"; // <-- your CreateQuiz page
+import Quizzes from "./Quizzes"; // <-- your Homepage Quiz page
+import CreateQuiz from "./CreateQuiz"; // <-- your CreateQuiz page 
 
 export default function DashboardPage({ onLogout }) {
   // 🔥 This fixes the white screen
@@ -259,7 +260,10 @@ export default function DashboardPage({ onLogout }) {
           )}
 
           {/* QUIZZES PAGE */}
-          {page === "quizzes" && <Quizzes />}
+         
+{page === "quizzes" && <Quizzes onCreate={() => setPage("createQuiz")} />}
+
+{page === "createQuiz" && <CreateQuiz />}
         </div>
       </main>
     </div>

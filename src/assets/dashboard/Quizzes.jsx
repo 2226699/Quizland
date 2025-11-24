@@ -1,144 +1,144 @@
-import React, { useState } from "react";
+import React from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
+import { Search } from "lucide-react";
 
-export default function Quizzes() {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [difficulty, setDifficulty] = useState("Medium");
-  const [duration, setDuration] = useState(30);
-  const [questions, setQuestions] = useState([
-    { id: 1, text: "", options: ["", "", "", ""], correct: 0 },
-  ]);
+/**
+ * Quizzes homepage (topic selection)
+ * Props:
+ *  - onCreate: function() -> called when Create Quiz button is clicked
+ *
+ * Image used from uploaded path:
+ * /mnt/data/59ee0810-a80b-402a-9e3a-09d659670ef0.png
+ */
 
-  const resetForm = () => {
-    setTitle("");
-    setDescription("");
-    setDifficulty("Medium");
-    setDuration(30);
-    setQuestions([{ id: 1, text: "", options: ["", "", "", ""], correct: 0 }]);
-  };
+const heroImg = "/mnt/data/59ee0810-a80b-402a-9e3a-09d659670ef0.png";
 
-  const addQuestion = () => {
-    setQuestions([
-      ...questions,
-      {
-        id: questions.length + 1,
-        text: "",
-        options: ["", "", "", ""],
-        correct: 0,
-      },
-    ]);
-  };
+const topics = [
+  {
+    id: "programming",
+    title: "Programming Fundamentals",
+    subtitle: "20 questions",
+    desc: "Variables, data types, control structures and basic algorithms",
+    color: "bg-blue-500",
+    accent: "border-blue-500",
+  },
+  {
+    id: "database",
+    title: "Database Management",
+    subtitle: "30 questions",
+    desc: "SQL database design, normalization, and queries",
+    color: "bg-emerald-500",
+    accent: "border-emerald-500",
+  },
+  {
+    id: "networks",
+    title: "Computer Networks",
+    subtitle: "20 questions",
+    desc: "Network protocols, TCP/IP, routing, and network security",
+    color: "bg-violet-500",
+    accent: "border-violet-500",
+  },
+  {
+    id: "security",
+    title: "Information Security",
+    subtitle: "40 questions",
+    desc: "Cybersecurity, encryption, authentication, and security practices",
+    color: "bg-red-500",
+    accent: "border-red-500",
+  },
+  {
+    id: "software",
+    title: "Software Engineering",
+    subtitle: "30 questions",
+    desc: "SDLC, design patterns, testing, and project management",
+    color: "bg-lime-300",
+    accent: "border-lime-400",
+  },
+  {
+    id: "web",
+    title: "Web Development",
+    subtitle: "30 questions",
+    desc: "HTML, CSS, Javascript, REST APIs and web frameworks",
+    color: "bg-purple-700",
+    accent: "border-purple-700",
+  },
+];
 
-  const updateQuestion = (index, field, value) => {
-    const updated = [...questions];
-    if (field === "text") updated[index].text = value;
-    if (field === "correct") updated[index].correct = value;
-    setQuestions(updated);
-  };
-
-  const updateOption = (qIndex, oIndex, value) => {
-    const updated = [...questions];
-    updated[qIndex].options[oIndex] = value;
-    setQuestions(updated);
-  };
-
+export default function Quizzes({ onCreate = () => {} }) {
   return (
-    <div className="min-h-screen flex bg-slate-50 text-slate-900">
-      {/* Sidebar */}
-      <aside className="w-64 bg-white border-r border-slate-200 flex flex-col">
-        <div className="h-16 flex items-center gap-3 px-6 border-b border-slate-200">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-600 text-white">📘</div>
-          <div>
-            <p className="text-xs font-semibold tracking-wide text-slate-800">TOPCIT</p>
-            <p className="text-[10px] text-slate-500">Learning Platform</p>
-          </div>
+    <div className="min-h-full bg-slate-50 text-slate-900">
+      {/* Header / breadcrumb */}
+      <div className="px-6 py-6 border-b border-slate-200 bg-white flex items-center justify-between">
+        <div>
+          <p className="text-xs text-slate-500">Select a Quiz</p>
+          <h2 className="text-lg font-semibold">Select a topic</h2>
         </div>
 
-        <nav className="flex-1 px-4 py-4 space-y-1 text-sm">
-          <button className="w-full flex items-center rounded-lg px-3 py-2 text-left bg-slate-100 text-slate-900 text-xs">Quizzes</button>
-          <button className="w-full flex items-center rounded-lg px-3 py-2 text-left text-slate-600 hover:bg-slate-100 text-xs">Dashboard</button>
-        </nav>
-      </aside>
-
-      {/* Main Content */}
-      <main className="flex-1 flex flex-col">
-        {/* Top bar */}
-        <header className="h-16 flex items-center justify-between border-b border-slate-200 bg-white px-6">
-          <div>
-            <h1 className="text-lg font-semibold">Create New Quiz</h1>
-            <p className="text-xs text-slate-500">Design your own quiz for TOPCIT practice</p>
-          </div>
-          <div className="flex items-center gap-3">
-            <Button variant="outline" className="text-xs" onClick={resetForm}>Cancel</Button>
-            <Button className="bg-green-600 hover:bg-green-700 text-xs">Save Quiz</Button>
-          </div>
-        </header>
-
-        {/* Content */}
-        <div className="p-6 space-y-6 overflow-y-auto">
-          <Card className="p-6">
-            <CardHeader>
-              <CardTitle className="text-base">Quiz Information</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4 text-sm">
-              <div>
-                <Label>Quiz Title</Label>
-                <Input placeholder="e.g. Advanced Programming Concepts" value={title} onChange={(e) => setTitle(e.target.value)} />
-              </div>
-
-              <div>
-                <Label>Description</Label>
-                <Input placeholder="Brief description of what this quiz covers" value={description} onChange={(e) => setDescription(e.target.value)} />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label>Difficulty Level</Label>
-                  <Input value={difficulty} readOnly className="bg-slate-100" />
-                </div>
-                <div>
-                  <Label>Duration (minutes)</Label>
-                  <Input type="number" value={duration} onChange={(e) => setDuration(e.target.value)} />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Questions */}
-          <div className="flex justify-between items-center">
-            <h2 className="text-sm font-semibold">Questions ({questions.length})</h2>
-            <Button className="bg-blue-600 text-xs" onClick={addQuestion}>+ Add Question</Button>
+        <div className="flex items-center gap-3">
+          <div className="w-64">
+            <div className="relative">
+              <Input placeholder="Search topics..." className="pl-9 text-xs" />
+              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+            </div>
           </div>
 
-          {questions.map((q, qi) => (
-            <Card key={q.id} className="p-6">
-              <CardHeader>
-                <CardTitle className="text-sm">Question {qi + 1}</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4 text-sm">
-                <div>
-                  <Label>Question Text</Label>
-                  <Input placeholder="Enter your questions here" value={q.text} onChange={(e) => updateQuestion(qi, "text", e.target.value)} />
-                </div>
+          <Button className="bg-green-600 hover:bg-green-700 text-xs" onClick={onCreate}>
+            + Create Quiz
+          </Button>
+        </div>
+      </div>
 
-                <div className="space-y-2">
-                  <Label>Answer Options</Label>
-                  {q.options.map((opt, oi) => (
-                    <div key={oi} className="flex items-center gap-2">
-                      <input type="radio" checked={q.correct === oi} onChange={() => updateQuestion(qi, "correct", oi)} />
-                      <Input placeholder={`Option ${String.fromCharCode(65 + oi)}`} value={opt} onChange={(e) => updateOption(qi, oi, e.target.value)} />
+      {/* Page content */}
+      <div className="p-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {topics.map((t) => (
+            <Card key={t.id} className="rounded-xl overflow-hidden">
+              <div className={`p-4 ${t.color} text-white rounded-t-xl`}>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="h-9 w-9 rounded-lg bg-white/20 flex items-center justify-center">
+                      {/* simple icon placeholder */}
+                      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 20v-6M12 4v4m0 0H8m4 0h4" />
+                      </svg>
                     </div>
-                  ))}
+                    <div>
+                      <p className="text-sm font-semibold">{t.title}</p>
+                      <p className="text-[11px] mt-1">{t.subtitle}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <CardContent className="p-4 pt-5">
+                <p className="text-xs text-slate-500 mb-4">{t.desc}</p>
+
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <button className="text-xs px-3 py-1 rounded-md border border-slate-200 bg-white">Multiple Choice</button>
+                    <button className="text-xs px-3 py-1 rounded-md border border-slate-200 bg-white">Flashcard</button>
+                  </div>
+
+                  <div className={`h-3 w-3 rounded-full ${t.accent.replace("border-", "bg-")}`} />
                 </div>
               </CardContent>
             </Card>
           ))}
         </div>
-      </main>
+
+        {/* down chevron / more area */}
+        <div className="flex items-center justify-center mt-8">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M19 9l-7 7-7-7" />
+          </svg>
+        </div>
+      </div>
+
+      {/* optional hero/banner image (from your upload) */}
+      <img src={heroImg} alt="quizzes-hero" className="sr-only" />
     </div>
   );
 }
