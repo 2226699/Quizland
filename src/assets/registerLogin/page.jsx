@@ -1,126 +1,166 @@
 import { useState } from "react";
 
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "../../components/ui/card";
+import { Button } from "../../components/ui/button";
+import { Input } from "../../components/ui/input";
+import { Label } from "../../components/ui/label";
+import {
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from "../../components/ui/tabs";
+import { Eye, EyeOff } from "lucide-react";
+
 export default function RegisterLoginPage() {
   const [mode, setMode] = useState("register");
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-white">
-      {/* Blue frame */}
-      <div className="w-[95vw] h-[90vh] max-w-6xl border-4 border-blue-600 rounded-3xl flex items-center justify-center bg-white">
-        {/* Tile background */}
-        <div
-          className="w-full h-full max-w-5xl max-h-[80vh] mx-auto rounded-3xl 
-                     bg-[radial-gradient(circle_at_1px_1px,#e5e7eb_1px,transparent_0)] 
-                     bg-[length:32px_32px] flex items-center justify-center"
-        >
-          {/* Center card */}
-          <div className="w-full max-w-sm rounded-3xl bg-white shadow-2xl px-10 py-10">
-            {/* logo / icon */}
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-600 text-white">
-              <span className="text-2xl">📘</span>
-            </div>
+    <div className="relative min-h-screen flex items-center justify-center bg-white">
+      {/* Background tiles */}
+      <div
+        className="absolute inset-0 -z-10
+                   bg-[radial-gradient(circle_at_1px_1px,#e5e7eb_1px,transparent_0)]
+                   bg-[length:32px_32px]"
+      />
 
-            {/* heading */}
-            <div className="text-center mb-6">
-              <h1 className="text-lg font-semibold text-slate-900">
-                Welcome to TOPCIT
-              </h1>
-              <p className="mt-1 text-xs text-slate-500">
-                Create an account to get started
-              </p>
-            </div>
+      {/* Single centered card */}
+      <Card className="w-full max-w-sm rounded-3xl shadow-2xl border border-slate-400 bg-white">
+        <CardHeader className="items-center pb-4">
+          {/* Logo / icon */}
+          <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-600 text-white">
+            <span className="text-2xl">📘</span>
+          </div>
 
-            {/* toggle buttons */}
-            <div className="mb-8 flex rounded-full bg-slate-100 p-1">
-              <button
-                onClick={() => setMode("login")}
-                className={`flex-1 rounded-full px-4 py-2 text-xs font-medium transition 
-                ${
-                  mode === "login"
-                    ? "bg-blue-600 text-white shadow-sm"
-                    : "text-slate-500"
-                }`}
+          {/* Header text */}
+          <CardTitle className="text-lg">Welcome to TOPCIT</CardTitle>
+          <CardDescription className="text-xs">
+            Create an account to get started
+          </CardDescription>
+        </CardHeader>
+
+        <CardContent className="pt-0">
+          {/* Tabs for login and register */}
+          <Tabs value={mode} onValueChange={setMode} className="w-full mb-6">
+            <TabsList className="grid w-full grid-cols-2 rounded-full bg-slate-100 p-1 ">
+              <TabsTrigger
+                value="login"
+                className="rounded-full text-xs data-[state=active]:bg-blue-600 data-[state=active]:text-white"
               >
                 Login
-              </button>
-              <button
-                onClick={() => setMode("register")}
-                className={`flex-1 rounded-full px-4 py-2 text-xs font-medium transition 
-                ${
-                  mode === "register"
-                    ? "bg-blue-600 text-white shadow-sm"
-                    : "text-slate-500"
-                }`}
+              </TabsTrigger>
+              <TabsTrigger
+                value="register"
+                className="rounded-full text-xs data-[state=active]:bg-blue-600 data-[state=active]:text-white"
               >
                 Register
-              </button>
-            </div>
+              </TabsTrigger>
+            </TabsList>
 
-            {/* form */}
-            <form className="space-y-4 text-sm">
-              {mode === "register" && (
-                <div>
-                  <label className="block text-slate-700 mb-1">Username</label>
-                  <input
-                    type="text"
-                    placeholder="Enter your username"
-                    className="w-full rounded-lg border border-slate-200 bg-slate-100 px-3 py-2 outline-none text-sm
-                               focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                  />
-                </div>
-              )}
+            <TabsContent value="login">
+              <AuthForm mode="login" />
+            </TabsContent>
+            <TabsContent value="register">
+              <AuthForm mode="register" />
+            </TabsContent>
+          </Tabs>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
 
-              <div>
-                <label className="block text-slate-700 mb-1">Email</label>
-                <div className="relative">
-                  <input
-                    type="email"
-                    placeholder="Enter your email"
-                    className="w-full rounded-lg border border-slate-200 bg-slate-100 px-3 py-2 pr-9 outline-none text-sm
-                               focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                  />
-                  <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-slate-400 text-xs">
-                    @
-                  </span>
-                </div>
-              </div>
+// Form component used for both login and register modes
+function AuthForm({ mode }) {
+  const isRegister = mode === "register";
 
-              <div>
-                <label className="block text-slate-700 mb-1">Password</label>
-                <input
-                  type="password"
-                  placeholder="Enter your password"
-                  className="w-full rounded-lg border border-slate-200 bg-slate-100 px-3 py-2 outline-none text-sm
-                             focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                />
-              </div>
+  // Local state for show / hide password
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-              {mode === "register" && (
-                <div>
-                  <label className="block text-slate-700 mb-1">
-                    Confirm Password
-                  </label>
-                  <input
-                    type="password"
-                    placeholder="Confirm your password"
-                    className="w-full rounded-lg border border-slate-200 bg-slate-100 px-3 py-2 outline-none text-sm
-                               focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                  />
-                </div>
-              )}
+  return (
+    <form className="space-y-4 text-sm">
+      {isRegister && (
+        <div className="space-y-1">
+          <Label htmlFor="username">Username</Label>
+          <Input id="username" placeholder="Enter your username" />
+        </div>
+      )}
 
-              <button
-                type="submit"
-                className="mt-4 w-full rounded-lg bg-blue-600 py-2.5 text-sm font-semibold text-white 
-                           shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 
-                           focus:ring-blue-500 focus:ring-offset-2"
-              >
-                {mode === "login" ? "Login" : "Register"}
-              </button>
-            </form>
-          </div>
+      <div className="space-y-1">
+        <Label htmlFor="email">Email</Label>
+        <div className="relative">
+          <Input
+            id="email"
+            type="email"
+            placeholder="Enter your email"
+            className="pr-7"
+          />
+          <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-slate-400 text-xs">
+            @
+          </span>
         </div>
       </div>
-    </div>
+
+      {/* Password with show/hide eye icon */}
+      <div className="space-y-1">
+        <Label htmlFor="password">Password</Label>
+        <div className="relative">
+          <Input
+            id="password"
+            type={showPassword ? "text" : "password"}
+            placeholder="Enter your password"
+            className="pr-10"
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword((prev) => !prev)}
+            className="absolute inset-y-0 right-2 flex items-center text-slate-400 hover:text-slate-600"
+          >
+            {showPassword ? (
+              <EyeOff className="w-4 h-4" />
+            ) : (
+              <Eye className="w-4 h-4" />
+            )}
+          </button>
+        </div>
+      </div>
+
+      {/* Confirm password with show/hide eye icon (register only) */}
+      {isRegister && (
+        <div className="space-y-1">
+          <Label htmlFor="confirmPassword">Confirm Password</Label>
+          <div className="relative">
+            <Input
+              id="confirmPassword"
+              type={showConfirmPassword ? "text" : "password"}
+              placeholder="Confirm your password"
+              className="pr-10"
+            />
+            <button
+              type="button"
+              onClick={() => setShowConfirmPassword((prev) => !prev)}
+              className="absolute inset-y-0 right-2 flex items-center text-slate-400 hover:text-slate-600"
+            >
+              {showConfirmPassword ? (
+                <EyeOff className="w-4 h-4" />
+              ) : (
+                <Eye className="w-4 h-4" />
+              )}
+            </button>
+          </div>
+        </div>
+      )}
+
+      <Button type="submit" className="mt-2 w-full">
+        {isRegister ? "Register" : "Login"}
+      </Button>
+    </form>
   );
 }
