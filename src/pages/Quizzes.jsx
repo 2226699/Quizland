@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from "react";
 import CreateQuiz from "./CreateQuiz";
 import MultipleChoiceQuiz from "./MultipleChoiceQuiz";
+import Flashcards from "./Flashcards";
 import { Button } from "../components/ui/button";
-import { Cpu, HardDrive, Server, Cloud, Monitor, Code, Database, Wifi, Smartphone, ClipboardList, Zap } from "lucide-react";
+import { 
+  Cpu, HardDrive, Server, Cloud, Monitor, Code, Database, Wifi, Smartphone,
+  ClipboardList, Zap 
+} from "lucide-react";
 
 // Map icon names to Lucide components
 const iconMap = {
@@ -12,18 +16,18 @@ const iconMap = {
 export default function Quizzes() {
   const [showCreate, setShowCreate] = useState(false);
   const [activeQuiz, setActiveQuiz] = useState(null);
+  const [flashcardQuiz, setFlashcardQuiz] = useState(null);
   const [savedQuizzes, setSavedQuizzes] = useState([]);
 
   // Load quizzes from localStorage
   const loadQuizzes = () => {
-    const data = JSON.parse(localStorage.getItem("quizzes") || "[]");
+    const data = JSON.parse(localStorage.getItem("quizzes") || "[]" );
     const normalized = data.map(q => ({
       ...q,
-      questions: Array.isArray(q.questions) ? q.questions : [],
+      questions: Array.isArray(q.questions) ? q.questions : []
     }));
     setSavedQuizzes(normalized);
   };
-
 
   useEffect(() => {
     loadQuizzes();
@@ -31,27 +35,46 @@ export default function Quizzes() {
 
   return (
     <div className="min-h-full bg-slate-50 text-slate-900">
-      
-      {/* If viewing a selected quiz */}
-      {activeQuiz ? (
-        <MultipleChoiceQuiz quiz={activeQuiz} onBack={() => setActiveQuiz(null)} />
+
+      {/* Flashcard Mode */}
+      {flashcardQuiz ? (
+        <Flashcards 
+          quiz={flashcardQuiz} 
+          onBack={() => setFlashcardQuiz(null)} 
+        />
+      ) : activeQuiz ? (
+
+        /* Multiple Choice Mode */
+        <MultipleChoiceQuiz 
+          quiz={activeQuiz} 
+          onBack={() => setActiveQuiz(null)} 
+        />
+
       ) : showCreate ? (
+
+        /* Create Quiz Form */
         <CreateQuiz
           onSave={() => {
             setShowCreate(false);
             loadQuizzes();
           }}
         />
+
       ) : (
+
+        /* QUIZ HOMEPAGE */
         <div className="p-6">
+          
           {/* Header */}
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-lg font-semibold">Your Quizzes</h2>
-           <Button
+
+            <Button
               className="bg-green-600 hover:bg-green-700 text-xs"
               onClick={() => {
-                setActiveQuiz(null); // clear any selected quiz
-                setShowCreate(true);  // show create quiz form
+                setActiveQuiz(null);
+                setFlashcardQuiz(null);
+                setShowCreate(true);
               }}
             >
               + Create Quiz
@@ -63,6 +86,7 @@ export default function Quizzes() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {savedQuizzes.map((q) => {
                 const IconComponent = iconMap[q.icon] || Cpu;
+
                 return (
                   <div
                     key={q.id}
@@ -74,7 +98,9 @@ export default function Quizzes() {
                       style={{ backgroundColor: q.bgColor || "#4ade80" }}
                     >
                       <IconComponent className="w-6 h-6 text-white" />
-                      <h3 className="text-white font-semibold text-sm">{q.title}</h3>
+                      <h3 className="text-white font-semibold text-sm">
+                        {q.title}
+                      </h3>
                     </div>
 
                     {/* Bottom white part */}
@@ -95,11 +121,11 @@ export default function Quizzes() {
                       </p>
 
                       {/* Buttons */}
-                     <div className="flex gap-2 mt-3">
+                      <div className="flex gap-2 mt-3">
                         <Button
                           className="bg-white border border-slate-200 text-slate-900 hover:bg-slate-50 
-                                    text-xs flex-1 flex items-center justify-center gap-1
-                                    cursor-pointer transition duration-150 hover:scale-105"
+                                   text-xs flex-1 flex items-center justify-center gap-1
+                                   cursor-pointer transition duration-150 hover:scale-105"
                           onClick={() => setActiveQuiz(q)}
                         >
                           <ClipboardList className="w-4 h-4" />
@@ -108,8 +134,9 @@ export default function Quizzes() {
 
                         <Button
                           className="bg-white border border-slate-200 text-slate-900 hover:bg-slate-50 
-                                    text-xs flex-1 flex items-center justify-center gap-1
-                                    cursor-pointer transition duration-150 hover:scale-105"
+                                   text-xs flex-1 flex items-center justify-center gap-1
+                                   cursor-pointer transition duration-150 hover:scale-105"
+                          onClick={() => setFlashcardQuiz(q)}
                         >
                           <Zap className="w-4 h-4" />
                           Flashcards
