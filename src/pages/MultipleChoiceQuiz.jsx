@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { ChevronLeft, Flag, ChevronRight } from "lucide-react";
 
 export default function MultipleChoiceQuiz({ quiz, onBack }) {
-  if (!quiz || !quiz.questions || quiz.questions.length === 0) {
+    if (!quiz || !quiz.questions || quiz.questions.length === 0) {
     return (
       <div className="p-6 text-red-600 text-sm">
         No quiz data available.

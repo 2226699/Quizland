@@ -17,8 +17,13 @@ export default function Quizzes() {
   // Load quizzes from localStorage
   const loadQuizzes = () => {
     const data = JSON.parse(localStorage.getItem("quizzes") || "[]");
-    setSavedQuizzes(data);
+    const normalized = data.map(q => ({
+      ...q,
+      questions: Array.isArray(q.questions) ? q.questions : [],
+    }));
+    setSavedQuizzes(normalized);
   };
+
 
   useEffect(() => {
     loadQuizzes();
@@ -42,9 +47,12 @@ export default function Quizzes() {
           {/* Header */}
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-lg font-semibold">Your Quizzes</h2>
-            <Button
+           <Button
               className="bg-green-600 hover:bg-green-700 text-xs"
-              onClick={() => setShowCreate(true)}
+              onClick={() => {
+                setActiveQuiz(null); // clear any selected quiz
+                setShowCreate(true);  // show create quiz form
+              }}
             >
               + Create Quiz
             </Button>
