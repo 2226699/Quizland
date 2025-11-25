@@ -5,6 +5,7 @@ import { Search, Edit2, Trash2 } from "lucide-react";
 import CreateNoteModal from "../components/CreateNoteModal";
 import EditNoteModal from "../components/EditNoteModal";
 import CreateTaskModal from "../components/CreateTaskModal";
+import { motion, AnimatePresence, Reorder } from "framer-motion";
 
 export default function NotesTask() {
   const [showCreateNoteModal, setShowCreateNoteModal] = useState(false);
@@ -15,6 +16,7 @@ export default function NotesTask() {
 
   const [showCreateTaskModal, setShowCreateTaskModal] = useState(false);
   const [tasks, setTasks] = useState(() => JSON.parse(localStorage.getItem("tasks") || "[]"));
+  
 
   useEffect(() => {
     localStorage.setItem("notes", JSON.stringify(notes));
@@ -40,10 +42,14 @@ export default function NotesTask() {
   };
 
   const handleSaveTask = (newTask) => setTasks((prev) => [...prev, newTask]);
-  const handleToggleTask = (id) =>
-    setTasks((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t))
-    );
+  const handleToggleTask = (id) => {
+    setTasks((prev) => {
+      const updated = prev.map((t) =>
+        t.id === id ? { ...t, completed: !t.completed } : t
+      );
+      return [...updated.filter(t => !t.completed), ...updated.filter(t => t.completed)];
+    });
+  };
   const handleDeleteTask = (id) => setTasks((prev) => prev.filter((t) => t.id !== id));
 
   return (
@@ -68,82 +74,117 @@ export default function NotesTask() {
       <div className="p-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Left: Notes */}
         <div className="space-y-3">
-            <div className="flex justify-between items-center mb-2">
-                <h3 className="text-sm font-semibold">Study Notes</h3>
-                <div className="flex gap-2">
-                <Button
-                  size="sm"
-                  className="text-xs h-7 px-3"
-                  onClick={() => setShowCreateNoteModal(true)}
-                >
-                  + Add Note
-                </Button>
-                <Button
-                    size="sm"
-                    className="text-xs h-7 px-3 bg-indigo-600 hover:bg-indigo-700 text-white"
-                >
-                    AI Summarize
-                </Button>
-                </div>
-            </div>
-
-            <div className="max-h-[700px] overflow-y-auto space-y-3 pr-2">
-                {notes.length > 0 ? (
-                notes.map((note) => (
-                    <div
-                    key={note.id}
-                    className={`p-4 rounded-xl shadow border border-slate-200 ${note.bgColor}`}
-                    >
-                    <div className="flex justify-between items-start">
-                        <div className="flex-1">
-                        <h4 className="text-lg font-semibold">{note.title}</h4>
-                        <p className="text-xs text-slate-500 mt-1">{note.content}</p>
-                        <p className="text-[10px] text-slate-400 mt-2">
-                            Created: {new Date(note.id).toLocaleDateString()}{" "}
-                            {new Date(note.id).toLocaleTimeString()}
-                        </p>
-                        </div>
-                        <div className="flex gap-2 ml-3">
-                            <button
-                                className="p-1 hover:bg-slate-200 rounded"
-                                onClick={() => setEditingNote(note)}
-                            >
-                                <Edit2 className="h-4 w-4 text-slate-600" />
-                            </button>
-                            <button
-                                className="p-1 hover:bg-red-100 rounded"
-                                onClick={() => handleDeleteNote(note.id)}
-                            >
-                                <Trash2 className="h-4 w-4 text-red-600" />
-                            </button>
-                        </div>
-                    </div>
-                    </div>
-                ))
-                ) : (
-                <p className="text-xs text-slate-500">No notes yet. Click "+ Add Note" to start.</p>
-                )}
-            </div>
-        </div>
-
-         {/* Tasks Column */}
-          <div className="space-y-4">
-            <div className="flex justify-between items-center mb-2">
-              <h3 className="text-sm font-semibold">Tasks</h3>
+          <div className="flex justify-between items-center mb-2">
+            <h3 className="text-sm font-semibold">Study Notes</h3>
+            <div className="flex gap-2">
               <Button
                 size="sm"
                 className="text-xs h-7 px-3"
-                onClick={() => setShowCreateTaskModal(true)}
+                onClick={() => setShowCreateNoteModal(true)}
               >
-                + Add Task
+                + Add Note
+              </Button>
+              <Button
+                size="sm"
+                className="text-xs h-7 px-3 bg-indigo-600 hover:bg-indigo-700 text-white"
+              >
+                AI Summarize
               </Button>
             </div>
+          </div>
 
-            <div className="max-h-[700px] overflow-y-auto space-y-3">
+          <Reorder.Group
+            axis="y"
+            values={notes}
+            onReorder={setNotes}
+            className="max-h-[700px] overflow-y-auto space-y-3 pr-2"
+          >
+            <AnimatePresence>
+              {notes.length > 0 ? (
+                notes.map((note) => (
+                  <Reorder.Item
+                    key={note.id}
+                    value={note}
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 20 }}
+                    className={`p-4 rounded-xl shadow border-l-4 ${note.bgColor} border border-slate-200`}
+                    style={{ borderLeftColor: note.borderColor }}
+                  >
+                    <div className="flex justify-between items-start">
+                      <div className="flex-1">
+                        <h4 className="text-lg font-semibold">{note.title}</h4>
+                        <p className="text-xs text-slate-500 mt-1">{note.content}</p>
+                        <p className="text-[10px] text-slate-400 mt-2">
+                          Created: {new Date(note.id).toLocaleDateString()}{" "}
+                          {new Date(note.id).toLocaleTimeString()}
+                        </p>
+                      </div>
+                      <div className="flex gap-2 ml-3">
+                        <button
+                          className="p-1 hover:bg-slate-200 rounded"
+                          onClick={() => setEditingNote(note)}
+                        >
+                          <Edit2 className="h-4 w-4 text-slate-600" />
+                        </button>
+                        <button
+                          className="p-1 hover:bg-red-100 rounded"
+                          onClick={() => handleDeleteNote(note.id)}
+                        >
+                          <Trash2 className="h-4 w-4 text-red-600" />
+                        </button>
+                      </div>
+                    </div>
+                  </Reorder.Item>
+                ))
+              ) : (
+                <p className="text-xs text-slate-500">
+                  No notes yet. Click "+ Add Note" to start.
+                </p>
+              )}
+            </AnimatePresence>
+          </Reorder.Group>
+        </div>
+
+         {/* Tasks Column */}
+         <div className="space-y-4">
+            <div className="flex justify-between items-center mb-2">
+              <h3 className="text-sm font-semibold">Tasks</h3>
+
+              {/* Right side: progress pill + button */}
+              <div className="flex items-center gap-2">
+                {/* Progress pill */}
+                {tasks.length > 0 && (
+                  <span className="text-[10px] px-3 py-1 rounded-full bg-blue-100 text-blue-700 font-medium">
+                    {tasks.filter((t) => t.completed).length}/{tasks.length}
+                  </span>
+                )}
+
+                <Button
+                  size="sm"
+                  className="text-xs h-7 px-3"
+                  onClick={() => setShowCreateTaskModal(true)}
+                >
+                  + Add Task
+                </Button>
+              </div>
+            </div>
+
+            {/* Task list with animation */}
+            <Reorder.Group
+              axis="y"
+              values={tasks}
+              onReorder={setTasks} // required for reordering
+              className="max-h-[700px] overflow-y-auto space-y-3"
+            >
               {tasks.length > 0 ? (
                 tasks.map((task) => (
-                  <div
+                  <Reorder.Item
                     key={task.id}
+                    value={task}
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 10 }}
                     className="p-4 bg-white rounded-xl shadow border border-slate-200 flex justify-between items-start"
                   >
                     <div className="flex-1 space-y-1">
@@ -165,7 +206,7 @@ export default function NotesTask() {
                       <div className="flex items-center justify-start gap-3 mt-2">
                         {task.priority && (
                           <span
-                            className={`text-[10px] px-3 py-1 rounded-full font-medium ${
+                            className={`text-[12px] px-3 py-1 rounded-full font-medium ${
                               task.priority === "high"
                                 ? "bg-red-100 text-red-700"
                                 : task.priority === "medium"
@@ -177,7 +218,7 @@ export default function NotesTask() {
                           </span>
                         )}
                         {task.dueDate && (
-                          <span className="text-[10px] text-slate-500">
+                          <span className="text-[12px] text-slate-500">
                             Due: {new Date(task.dueDate).toLocaleDateString()}
                           </span>
                         )}
@@ -198,12 +239,14 @@ export default function NotesTask() {
                         <Trash2 className="h-4 w-4 text-red-600" />
                       </button>
                     </div>
-                  </div>
+                  </Reorder.Item>
                 ))
               ) : (
-                <p className="text-xs text-slate-500">No tasks yet. Click "+ Add Task" to start.</p>
+                <p className="text-xs text-slate-500">
+                  No tasks yet. Click "+ Add Task" to start.
+                </p>
               )}
-            </div>
+            </Reorder.Group>
           </div>
       </div>
 

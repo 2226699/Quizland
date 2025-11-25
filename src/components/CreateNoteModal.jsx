@@ -16,12 +16,23 @@ export default function CreateNoteModal({ onClose, onSave }) {
     "bg-purple-100",
   ];
 
+  const borderColors = {
+    "bg-white": "#d1d5db",
+    "bg-yellow-100": "#facc15",
+    "bg-green-100": "#4ade80",
+    "bg-blue-100": "#60a5fa",
+    "bg-pink-100": "#f472b6",
+    "bg-purple-100": "#a78bfa",
+  };
+
+
   const handleSave = () => {
     const newNote = {
       id: Date.now(),
       title,
       content,
       bgColor,
+      borderColor: borderColors[bgColor],
     };
     onSave(newNote);
     onClose();
