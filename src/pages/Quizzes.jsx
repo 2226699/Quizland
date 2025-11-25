@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import CreateQuiz from "./CreateQuiz";
-import { Card, CardHeader, CardTitle, CardContent } from "../components/ui/card";
+import MultipleChoiceQuiz from "./MultipleChoiceQuiz";
 import { Button } from "../components/ui/button";
-import { Cpu, HardDrive, Server, Cloud, Monitor, Code, Database, Wifi, Smartphone, ClipboardList, Zap} from "lucide-react";
+import { Cpu, HardDrive, Server, Cloud, Monitor, Code, Database, Wifi, Smartphone, ClipboardList, Zap } from "lucide-react";
 
 // Map icon names to Lucide components
 const iconMap = {
@@ -11,6 +11,7 @@ const iconMap = {
 
 export default function Quizzes() {
   const [showCreate, setShowCreate] = useState(false);
+  const [activeQuiz, setActiveQuiz] = useState(null);
   const [savedQuizzes, setSavedQuizzes] = useState([]);
 
   // Load quizzes from localStorage
@@ -25,7 +26,11 @@ export default function Quizzes() {
 
   return (
     <div className="min-h-full bg-slate-50 text-slate-900">
-      {showCreate ? (
+      
+      {/* If viewing a selected quiz */}
+      {activeQuiz ? (
+        <MultipleChoiceQuiz quiz={activeQuiz} onBack={() => setActiveQuiz(null)} />
+      ) : showCreate ? (
         <CreateQuiz
           onSave={() => {
             setShowCreate(false);
@@ -51,28 +56,53 @@ export default function Quizzes() {
               {savedQuizzes.map((q) => {
                 const IconComponent = iconMap[q.icon] || Cpu;
                 return (
-                  <div key={q.id} className="rounded-xl overflow-hidden shadow-lg border border-slate-200">
+                  <div
+                    key={q.id}
+                    className="rounded-xl overflow-hidden shadow-lg border border-slate-200"
+                  >
                     {/* Top colored part */}
-                    <div className="p-4 flex items-center gap-3" style={{ backgroundColor: q.bgColor || "#4ade80" }}>
+                    <div
+                      className="p-4 flex items-center gap-3"
+                      style={{ backgroundColor: q.bgColor || "#4ade80" }}
+                    >
                       <IconComponent className="w-6 h-6 text-white" />
                       <h3 className="text-white font-semibold text-sm">{q.title}</h3>
                     </div>
+
                     {/* Bottom white part */}
                     <div className="p-4 bg-white space-y-2">
-                        <p className="text-xs text-slate-600">{q.description}</p>
-                        <p className="text-xs text-slate-500">
-                          • {q.questions.length} {q.questions.length === 1 ? "question" : "questions"}
-                        </p>
-                        <p className="text-xs text-slate-500">• Difficulty: {q.difficulty}</p>
-                        <p className="text-xs text-slate-500">• Duration: {q.duration} mins</p>
+                      <p className="text-xs text-slate-600">{q.description}</p>
+
+                      <p className="text-xs text-slate-500">
+                        • {q.questions.length}{" "}
+                        {q.questions.length === 1 ? "question" : "questions"}
+                      </p>
+
+                      <p className="text-xs text-slate-500">
+                        • Difficulty: {q.difficulty}
+                      </p>
+
+                      <p className="text-xs text-slate-500">
+                        • Duration: {q.duration} mins
+                      </p>
 
                       {/* Buttons */}
-                      <div className="flex gap-2 mt-3">
-                        <Button className="bg-white border border-slate-200 text-slate-900 hover:bg-slate-50 text-xs flex-1 flex items-center justify-center gap-1">
+                     <div className="flex gap-2 mt-3">
+                        <Button
+                          className="bg-white border border-slate-200 text-slate-900 hover:bg-slate-50 
+                                    text-xs flex-1 flex items-center justify-center gap-1
+                                    cursor-pointer transition duration-150 hover:scale-105"
+                          onClick={() => setActiveQuiz(q)}
+                        >
                           <ClipboardList className="w-4 h-4" />
                           Multiple Choice
                         </Button>
-                        <Button className="bg-white border border-slate-200 text-slate-900 hover:bg-slate-50 text-xs flex-1 flex items-center justify-center gap-1">
+
+                        <Button
+                          className="bg-white border border-slate-200 text-slate-900 hover:bg-slate-50 
+                                    text-xs flex-1 flex items-center justify-center gap-1
+                                    cursor-pointer transition duration-150 hover:scale-105"
+                        >
                           <Zap className="w-4 h-4" />
                           Flashcards
                         </Button>

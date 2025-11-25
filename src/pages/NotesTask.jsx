@@ -60,14 +60,14 @@ export default function NotesTask() {
           <h2 className="text-lg font-semibold">Notes & Tasks</h2>
           <p className="text-xs text-slate-500">Organize your study materials and tasks</p>
         </div>
-        <div className="flex items-center gap-3">
+        {/* <div className="flex items-center gap-3">
           <div className="w-64">
             <div className="relative">
               <Input placeholder="Search notes or tasks..." className="pl-9 text-xs" />
               <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
 
       {/* Page content */}
