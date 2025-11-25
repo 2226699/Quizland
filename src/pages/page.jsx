@@ -61,8 +61,8 @@ export default function DashboardPage({ onLogout }) {
 
       {/* Main content */}
       <main className="flex-1 flex flex-col">
-        {/* Top bar */}
-        <header className="h-16 flex items-center justify-between border-b border-slate-200 bg-white px-6">
+       {/* Top bar */}
+        <header className="sticky top-0 z-50 h-16 flex items-center justify-between border-b border-slate-200 bg-white px-6">
           <div className="w-80">
             <div className="relative">
               <Input
@@ -78,16 +78,6 @@ export default function DashboardPage({ onLogout }) {
               <Bell className="h-4 w-4 text-slate-500" />
             </button>
 
-            {/* Logout */}
-            <Button
-              variant="outline"
-              size="sm"
-              className="text-xs"
-              onClick={onLogout}
-            >
-              Logout
-            </Button>
-
             <div className="flex items-center gap-2">
               <div className="text-right">
                 <p className="text-xs font-medium">Carlos Optimal</p>
@@ -97,6 +87,16 @@ export default function DashboardPage({ onLogout }) {
                 CO
               </div>
             </div>
+
+            {/* Logout */}
+            <Button
+              variant="outline"
+              size="sm"
+              className="text-xs"
+              onClick={onLogout}
+            >
+              Logout
+            </Button>
           </div>
         </header>
 
