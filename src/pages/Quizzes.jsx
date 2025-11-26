@@ -3,6 +3,8 @@ import CreateQuiz from "./CreateQuiz";
 import MultipleChoiceQuiz from "./MultipleChoiceQuiz";
 import Flashcards from "./Flashcards";
 import { Button } from "../components/ui/button";
+import ResultsPage from "./ResultsPage";
+
 import { 
   Cpu, HardDrive, Server, Cloud, Monitor, Code, Database, Wifi, Smartphone,
   ClipboardList, Zap 
@@ -18,6 +20,12 @@ export default function Quizzes() {
   const [activeQuiz, setActiveQuiz] = useState(null);
   const [flashcardQuiz, setFlashcardQuiz] = useState(null);
   const [savedQuizzes, setSavedQuizzes] = useState([]);
+const [quizResult, setQuizResult] = useState(null);
+const retakeQuiz = () => {
+  setQuizResult(null);
+  setActiveQuiz(quizResult.quiz);
+};
+
 
   // Load quizzes from localStorage
   const loadQuizzes = () => {
@@ -36,19 +44,30 @@ export default function Quizzes() {
   return (
     <div className="min-h-full bg-slate-50 text-slate-900">
 
-      {/* Flashcard Mode */}
-      {flashcardQuiz ? (
-        <Flashcards 
-          quiz={flashcardQuiz} 
-          onBack={() => setFlashcardQuiz(null)} 
-        />
+      {/* RESULTS MODE — MUST BE FIRST */}
+    {quizResult ? (
+      <ResultsPage 
+  result={quizResult} 
+  onBack={() => setQuizResult(null)}
+  onRetake={retakeQuiz}
+/>
+    ) : flashcardQuiz ? (
+
+      /* Flashcard Mode */
+      <Flashcards 
+        quiz={flashcardQuiz} 
+        onBack={() => setFlashcardQuiz(null)} 
+      />
+
       ) : activeQuiz ? (
 
         /* Multiple Choice Mode */
         <MultipleChoiceQuiz 
-          quiz={activeQuiz} 
-          onBack={() => setActiveQuiz(null)} 
-        />
+    quiz={activeQuiz}
+    onBack={() => setActiveQuiz(null)}
+    onSubmit={(result) => setQuizResult(result)}
+/>
+
 
       ) : showCreate ? (
 
