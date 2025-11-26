@@ -13,7 +13,7 @@ import { BookOpen, Search, Bell, Home, Book, FileText, User, Trophy, BarChart2, 
 import Quizzes from "./Quizzes";
 import CreateQuiz from "./CreateQuiz";
 import NotesTask from "./NotesTask";
-
+import Leaderboard from "./Leaderboard";
 
 export default function DashboardPage({ onLogout }) {
   const [page, setPage] = useState("dashboard");
@@ -46,7 +46,12 @@ export default function DashboardPage({ onLogout }) {
           <SidebarItem icon={FileText} active={page === "notesTasks"} onClick={() => setPage("notesTasks")}>
             Notes & Tasks
           </SidebarItem>
-          <SidebarItem icon={Trophy}>Leaderboard</SidebarItem>
+
+
+          <SidebarItem icon={Trophy} active={page === "leaderboard"} onClick={() => setPage("leaderboard")}>
+  Leaderboard
+</SidebarItem>
+
           <SidebarItem icon={User}>Profile</SidebarItem>
         </nav>
 
@@ -263,6 +268,7 @@ export default function DashboardPage({ onLogout }) {
 
 {page === "createQuiz" && <CreateQuiz />}
 {page === "notesTasks" && <NotesTask />}
+{page === "leaderboard" && <Leaderboard />}
         </div>
       </main>
     </div>
