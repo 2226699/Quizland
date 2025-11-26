@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ChevronLeft, Flag, ChevronRight, Timer } from "lucide-react";
+import { ChevronLeft, Flag, ChevronRight, Timer, Undo2 } from "lucide-react";
 
 export default function MultipleChoiceQuiz({ quiz, onBack, onSubmit }) {
   if (!quiz || !quiz.questions || quiz.questions.length === 0) {
@@ -78,11 +78,26 @@ export default function MultipleChoiceQuiz({ quiz, onBack, onSubmit }) {
   return (
     <div className="p-6 min-h-screen bg-slate-50 flex flex-col gap-4">
 
+      {/* Top bar */}
+      <div className="flex justify-between items-center">
+        <button
+          onClick={onBack}
+          className="text-slate-600 hover:text-slate-900 text-sm flex items-center gap-1"
+        >
+          <Undo2 size={16} /> Back
+        </button>
+
+        <div className="text-xs bg-purple-100 text-purple-700 px-3 py-1 rounded-full">
+          {quiz.title}
+        </div>
+      </div>
+
+
       {/* TOP CARD: Question Progress + TIMER */}
       <div className="bg-white p-4 rounded-xl shadow border border-slate-200 flex justify-between items-center">
         
         {/* Left: progress */}
-        <div>
+        <div className="flex-1 pr-6">
           <div className="text-sm font-semibold text-slate-800 mb-2">
             Question {currentIndex + 1} of {quiz.questions.length}
           </div>
@@ -164,7 +179,7 @@ export default function MultipleChoiceQuiz({ quiz, onBack, onSubmit }) {
         )}
       </div>
 
-      {/* NAVIGATOR */}
+     {/* NAVIGATOR */}
       <div className="bg-white p-4 rounded-xl shadow border border-slate-200 space-y-3">
         <div className="text-sm font-medium text-slate-700">Question Navigator</div>
 
@@ -190,14 +205,27 @@ export default function MultipleChoiceQuiz({ quiz, onBack, onSubmit }) {
             );
           })}
         </div>
-      </div>
 
-      <button
-        onClick={onBack}
-        className="mt-4 px-4 py-2 text-xs rounded-lg bg-slate-200 hover:bg-slate-300"
-      >
-        Back to Quizzes
-      </button>
+        {/* LEGEND */}
+        <div className="flex items-center gap-4 text-xs pt-2">
+          <div className="flex items-center gap-1">
+            <div className="w-3 h-3 bg-blue-50 border border-blue-600 rounded-sm" />
+            Current
+          </div>
+          <div className="flex items-center gap-1">
+            <div className="w-3 h-3 bg-yellow-100 border border-yellow-400 rounded-sm" />
+            Flagged
+          </div>
+          <div className="flex items-center gap-1">
+            <div className="w-3 h-3 bg-green-50 border border-green-400 rounded-sm" />
+            Answered
+          </div>
+          <div className="flex items-center gap-1">
+            <div className="w-3 h-3 bg-slate-100 border border-slate-300 rounded-sm" />
+            Unanswered
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

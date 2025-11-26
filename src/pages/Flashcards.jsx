@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ArrowLeft, ArrowRight, Flag, Undo2 } from "lucide-react";
+import { ChevronLeft, Flag, ChevronRight, Undo2 } from "lucide-react";
 
 export default function Flashcards({ quiz, onBack }) {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -78,75 +78,74 @@ export default function Flashcards({ quiz, onBack }) {
 
 
 
-      {/* Navigation buttons */}
-      <div className="flex justify-between items-center">
+     {/* Navigation buttons */}
+      <div className="flex justify-between items-center gap-3 bg-white p-3 rounded-xl shadow border border-slate-200">
+
+        {/* Previous */}
         <button
-          className="px-5 py-2 bg-white border border-slate-300 rounded-lg hover:bg-slate-100 text-xs"
+          className="flex items-center gap-1 px-3 py-2 text-xs rounded-lg border border-slate-300 hover:bg-slate-100 disabled:opacity-50"
           onClick={() => {
             setIsFlipped(false);
             currentIndex > 0 && setCurrentIndex(currentIndex - 1);
           }}
           disabled={currentIndex === 0}
         >
-          ← Previous
+          <ChevronLeft className="w-4 h-4" /> Previous
         </button>
 
+        {/* Flag */}
         <button
-          className={`px-5 py-2 text-xs rounded-lg border ${
-            flags[currentIndex]
-              ? "bg-yellow-300 border-yellow-500"
-              : "bg-white border-slate-300 hover:bg-slate-100"
+          className={`flex items-center gap-1 px-3 py-2 text-xs rounded-lg border border-slate-300 cursor-pointer ${
+            flags[currentIndex] ? "bg-yellow-300" : "hover:bg-slate-100"
           }`}
           onClick={toggleFlag}
         >
-          <Flag size={14} className="inline-block mr-1" />
-          {flags[currentIndex] ? "Unflag" : "Flag Question"}
+          <Flag className="w-4 h-4" />
+          {flags[currentIndex] ? "Unflag" : "Flag"}
         </button>
 
+        {/* Next */}
         <button
-          className="px-5 py-2 bg-white border border-slate-300 rounded-lg hover:bg-slate-100 text-xs"
+          className="flex items-center gap-1 px-3 py-2 text-xs rounded-lg border border-slate-300 hover:bg-slate-100 disabled:opacity-50"
           onClick={() => {
             setIsFlipped(false);
-            currentIndex < total - 1 &&
-              setCurrentIndex(currentIndex + 1);
+            currentIndex < total - 1 && setCurrentIndex(currentIndex + 1);
           }}
           disabled={currentIndex === total - 1}
         >
-          Next →
+          Next <ChevronRight className="w-4 h-4" />
         </button>
+
       </div>
+
 
       {/* Question Navigator */}
       <div className="bg-white p-4 rounded-xl shadow border border-slate-200">
         <div className="grid grid-cols-10 gap-2">
-          {quiz.questions.map((_, i) => (
-            <div
-              key={i}
-              onClick={() => {
-                setIsFlipped(false);
-                setCurrentIndex(i);
-              }}
-              className={`h-8 flex items-center justify-center rounded-md text-xs cursor-pointer border transition 
-                ${
-                  currentIndex === i
-                    ? "bg-purple-600 text-white border-purple-600"
-                    : "bg-slate-100 border-slate-300"
-                }
-                ${
-                  status[i] === "known"
-                    ? "bg-green-200 border-green-400 text-green-900"
-                    : ""
-                }
-                ${
-                  status[i] === "review"
-                    ? "bg-red-200 border-red-400 text-red-900"
-                    : ""
-                }
-              `}
-            >
-              {i + 1}
-            </div>
-          ))}
+          {quiz.questions.map((_, i) => {
+            const isCurrent = currentIndex === i;
+            const isFlagged = flags[i];
+
+            return (
+              <div
+                key={i}
+                onClick={() => {
+                  setIsFlipped(false);
+                  setCurrentIndex(i);
+                }}
+                className={`
+                  h-8 flex items-center justify-center rounded-md text-xs cursor-pointer border transition
+
+                  ${isCurrent ? "bg-purple-600 text-white border-purple-600" : "bg-slate-100 border-slate-300"}
+
+                  ${isFlagged && !isCurrent ? "bg-yellow-300 border-yellow-500 text-slate-900" : ""}
+                  ${isFlagged && isCurrent ? "bg-yellow-400 border-yellow-600 text-slate-900" : ""}
+                `}
+              >
+                {i + 1}
+              </div>
+            );
+          })}
         </div>
 
         {/* Legend */}
@@ -155,10 +154,7 @@ export default function Flashcards({ quiz, onBack }) {
             <div className="w-3 h-3 bg-purple-600 rounded-sm" /> Current
           </div>
           <div className="flex items-center gap-1">
-            <div className="w-3 h-3 bg-green-300 rounded-sm" /> Known
-          </div>
-          <div className="flex items-center gap-1">
-            <div className="w-3 h-3 bg-red-300 rounded-sm" /> Need Review
+            <div className="w-3 h-3 bg-yellow-300 rounded-sm border border-yellow-500" /> Flagged
           </div>
         </div>
       </div>

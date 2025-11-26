@@ -16,7 +16,7 @@ import {
   TabsTrigger,
   TabsContent,
 } from "../components/ui/tabs";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, BookOpen } from "lucide-react";
 
 // ✅ now accepts onAuthSuccess from parent (App.jsx)
 export default function RegisterLoginPage({ onAuthSuccess }) {
@@ -35,8 +35,8 @@ export default function RegisterLoginPage({ onAuthSuccess }) {
       <Card className="w-full max-w-sm rounded-3xl shadow-2xl border border-slate-400 bg-white">
         <CardHeader className="items-center pb-4">
           {/* Logo / icon */}
-          <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-600 text-white">
-            <span className="text-2xl">📘</span>
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-600 text-white">
+            <BookOpen className="h-5 w-5" />
           </div>
 
           {/* Header text */}
