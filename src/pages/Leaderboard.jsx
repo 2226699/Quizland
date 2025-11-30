@@ -119,8 +119,8 @@ export default function Leaderboard() {
       {/* Header */}
       <div className="flex items-center justify-between gap-4">
         <div>
-          <p className="text-xs text-slate-500">Leaderboard</p>
-          <h1 className="text-lg font-semibold">See how you rank against other students</h1>
+          <h2 className="text-lg font-semibold">Quizzes</h2>
+          <p className="text-xs text-slate-500">Track, practice, and share your quizzes effortlessly</p>
         </div>
 
         <div className="flex items-center gap-3">

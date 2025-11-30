@@ -4,6 +4,7 @@ import MultipleChoiceQuiz from "./MultipleChoiceQuiz";
 import Flashcards from "./Flashcards";
 import { Button } from "../components/ui/button";
 import ResultsPage from "./ResultsPage";
+import { motion } from "framer-motion";
 
 import { 
   Cpu, HardDrive, Server, Cloud, Monitor, Code, Database, Wifi, Smartphone,
@@ -85,9 +86,14 @@ const retakeQuiz = () => {
         <div className="p-6">
           
           {/* Header */}
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-lg font-semibold">Your Quizzes</h2>
+          <div className="flex justify-between items-start mb-6">
+            {/* Heading + Subtitle */}
+            <div className="flex flex-col">
+              <h2 className="text-lg font-semibold">Quizzes</h2>
+              <p className="text-xs text-slate-500">Organize your study materials and tasks</p>
+            </div>
 
+            {/* Create Button */}
             <Button
               className="bg-green-600 hover:bg-green-700 text-xs"
               onClick={() => {
@@ -100,69 +106,74 @@ const retakeQuiz = () => {
             </Button>
           </div>
 
+
           {/* Saved Quizzes */}
           {savedQuizzes.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {savedQuizzes.map((q) => {
+              {savedQuizzes.map((q, i) => {
                 const IconComponent = iconMap[q.icon] || Cpu;
 
                 return (
-                  <div
+                  <motion.div
                     key={q.id}
-                    className="rounded-xl overflow-hidden shadow-lg border border-slate-200"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.1, duration: 0.4, ease: "easeOut" }}
                   >
-                    {/* Top colored part */}
-                    <div
-                      className="p-4 flex items-center gap-3"
-                      style={{ backgroundColor: q.bgColor || "#4ade80" }}
-                    >
-                      <IconComponent className="w-6 h-6 text-white" />
-                      <h3 className="text-white font-semibold text-sm">
-                        {q.title}
-                      </h3>
-                    </div>
+                    <div className="rounded-xl overflow-hidden shadow-lg border border-slate-200">
+                      {/* Top colored part */}
+                      <div
+                        className="p-4 flex items-center gap-3"
+                        style={{ backgroundColor: q.bgColor || "#4ade80" }}
+                      >
+                        <IconComponent className="w-6 h-6 text-white" />
+                        <h3 className="text-white font-semibold text-sm">
+                          {q.title}
+                        </h3>
+                      </div>
 
-                    {/* Bottom white part */}
-                    <div className="p-4 bg-white space-y-2">
-                      <p className="text-xs text-slate-600">{q.description}</p>
+                      {/* Bottom white part */}
+                      <div className="p-4 bg-white space-y-2">
+                        <p className="text-xs text-slate-600">{q.description}</p>
 
-                      <p className="text-xs text-slate-500">
-                        • {q.questions.length}{" "}
-                        {q.questions.length === 1 ? "question" : "questions"}
-                      </p>
+                        <p className="text-xs text-slate-500">
+                          • {q.questions.length}{" "}
+                          {q.questions.length === 1 ? "question" : "questions"}
+                        </p>
 
-                      <p className="text-xs text-slate-500">
-                        • Difficulty: {q.difficulty}
-                      </p>
+                        <p className="text-xs text-slate-500">
+                          • Difficulty: {q.difficulty}
+                        </p>
 
-                      <p className="text-xs text-slate-500">
-                        • Duration: {q.duration} mins
-                      </p>
+                        <p className="text-xs text-slate-500">
+                          • Duration: {q.duration} mins
+                        </p>
 
-                      {/* Buttons */}
-                      <div className="flex gap-2 mt-3">
-                        <Button
-                          className="bg-white border border-slate-200 text-slate-900 hover:bg-slate-50 
-                                   text-xs flex-1 flex items-center justify-center gap-1
-                                   cursor-pointer transition duration-150 hover:scale-105"
-                          onClick={() => setActiveQuiz(q)}
-                        >
-                          <ClipboardList className="w-4 h-4" />
-                          Multiple Choice
-                        </Button>
+                        {/* Buttons */}
+                        <div className="flex gap-2 mt-3">
+                          <Button
+                            className="bg-white border border-slate-200 text-slate-900 hover:bg-slate-50 
+                                    text-xs flex-1 flex items-center justify-center gap-1
+                                    cursor-pointer transition duration-150 hover:scale-105"
+                            onClick={() => setActiveQuiz(q)}
+                          >
+                            <ClipboardList className="w-4 h-4" />
+                            Multiple Choice
+                          </Button>
 
-                        <Button
-                          className="bg-white border border-slate-200 text-slate-900 hover:bg-slate-50 
-                                   text-xs flex-1 flex items-center justify-center gap-1
-                                   cursor-pointer transition duration-150 hover:scale-105"
-                          onClick={() => setFlashcardQuiz(q)}
-                        >
-                          <Zap className="w-4 h-4" />
-                          Flashcards
-                        </Button>
+                          <Button
+                            className="bg-white border border-slate-200 text-slate-900 hover:bg-slate-50 
+                                    text-xs flex-1 flex items-center justify-center gap-1
+                                    cursor-pointer transition duration-150 hover:scale-105"
+                            onClick={() => setFlashcardQuiz(q)}
+                          >
+                            <Zap className="w-4 h-4" />
+                            Flashcards
+                          </Button>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  </motion.div>
                 );
               })}
             </div>
