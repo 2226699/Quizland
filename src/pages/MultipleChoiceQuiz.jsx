@@ -47,7 +47,7 @@ export default function MultipleChoiceQuiz({ quiz, onBack, onSubmit }) {
 
     quiz.questions.forEach((q, i) => {
       const user = answers[i];
-      if (user === q.correct) correct++;
+      if (user === q.answer) correct++;
       else incorrect++;
     });
 
@@ -92,7 +92,6 @@ export default function MultipleChoiceQuiz({ quiz, onBack, onSubmit }) {
         </div>
       </div>
 
-
       {/* TOP CARD: Question Progress + TIMER */}
       <div className="bg-white p-4 rounded-xl shadow border border-slate-200 flex justify-between items-center">
         
@@ -122,7 +121,7 @@ export default function MultipleChoiceQuiz({ quiz, onBack, onSubmit }) {
 
       {/* QUESTION CARD */}
       <div className="bg-white p-5 rounded-xl shadow border border-slate-200 min-h-[150px]">
-        <p className="text-sm text-slate-900">{q.text}</p>
+        <p className="text-sm text-slate-900">{q.question}</p>
 
         <div className="mt-4 space-y-2">
           {q.options.map((opt, i) => (

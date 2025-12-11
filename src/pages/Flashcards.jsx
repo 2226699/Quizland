@@ -9,7 +9,7 @@ export default function Flashcards({ quiz, onBack }) {
 
   const q = quiz.questions[currentIndex];
   const total = quiz.questions.length;
-  const correctAnswer = q.options[q.correct];
+  const correctAnswer = q.options[q.answer];
 
   const progress = ((currentIndex + 1) / total) * 100;
 
@@ -53,32 +53,30 @@ export default function Flashcards({ quiz, onBack }) {
       </div>
 
       {/* Flashcard */}
-<div className="relative w-full h-72 cursor-pointer perspective" onClick={() => setIsFlipped(!isFlipped)}>
+      <div className="relative w-full h-72 cursor-pointer perspective" onClick={() => setIsFlipped(!isFlipped)}>
 
-  {/* Card */}
-  <div className={`relative w-full h-full transition-transform duration-500 transform-style-preserve-3d 
-      ${isFlipped ? "rotate-y-180" : ""}`}>
+        {/* Card */}
+        <div className={`relative w-full h-full transition-transform duration-500 transform-style-preserve-3d 
+            ${isFlipped ? "rotate-y-180" : ""}`}>
 
-    {/* FRONT SIDE */}
-    <div className="absolute inset-0 backface-hidden bg-white rounded-xl shadow border border-slate-200 flex flex-col items-center justify-center px-10">
-      <div className="text-purple-700 font-semibold text-sm mb-1">Question</div>
-      <p className="text-lg font-medium text-slate-800 text-center">{q.text}</p>
-      <p className="text-xs text-slate-400 mt-4">click card to flip back</p>
-    </div>
+          {/* FRONT SIDE */}
+          <div className="absolute inset-0 backface-hidden bg-white rounded-xl shadow border border-slate-200 flex flex-col items-center justify-center px-10">
+            <div className="text-purple-700 font-semibold text-sm mb-1">Question</div>
+            <p className="text-lg font-medium text-slate-800 text-center">{q.question}</p>
+            <p className="text-xs text-slate-400 mt-4">click card to flip back</p>
+          </div>
 
-    {/* BACK SIDE */}
-    <div className="absolute inset-0 rotate-y-180 backface-hidden bg-white rounded-xl shadow border border-slate-200 flex flex-col items-center justify-center px-10">
-      <div className="text-green-700 font-semibold text-sm mb-1">Answer</div>
-      <p className="text-lg font-medium text-slate-800 text-center">{correctAnswer}</p>
-      <p className="text-xs text-slate-400 mt-4">click card to flip front</p>
-    </div>
+          {/* BACK SIDE */}
+          <div className="absolute inset-0 rotate-y-180 backface-hidden bg-white rounded-xl shadow border border-slate-200 flex flex-col items-center justify-center px-10">
+            <div className="text-green-700 font-semibold text-sm mb-1">Answer</div>
+            <p className="text-lg font-medium text-slate-800 text-center">{correctAnswer}</p>
+            <p className="text-xs text-slate-400 mt-4">click card to flip front</p>
+          </div>
 
-  </div>
-</div>
+        </div>
+      </div>
 
-
-
-     {/* Navigation buttons */}
+      {/* Navigation buttons */}
       <div className="flex justify-between items-center gap-3 bg-white p-3 rounded-xl shadow border border-slate-200">
 
         {/* Previous */}
@@ -118,7 +116,6 @@ export default function Flashcards({ quiz, onBack }) {
 
       </div>
 
-
       {/* Question Navigator */}
       <div className="bg-white p-4 rounded-xl shadow border border-slate-200">
         <div className="grid grid-cols-10 gap-2">
@@ -135,9 +132,7 @@ export default function Flashcards({ quiz, onBack }) {
                 }}
                 className={`
                   h-8 flex items-center justify-center rounded-md text-xs cursor-pointer border transition
-
                   ${isCurrent ? "bg-purple-600 text-white border-purple-600" : "bg-slate-100 border-slate-300"}
-
                   ${isFlagged && !isCurrent ? "bg-yellow-300 border-yellow-500 text-slate-900" : ""}
                   ${isFlagged && isCurrent ? "bg-yellow-400 border-yellow-600 text-slate-900" : ""}
                 `}
