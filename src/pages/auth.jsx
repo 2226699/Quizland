@@ -1,4 +1,5 @@
 import { useState,useEffect } from "react";
+import banner from "../assets/banner.png";
 
 import {
   Card,
@@ -23,7 +24,10 @@ export default function RegisterLoginPage({ onAuthSuccess }) {
   const [mode, setMode] = useState("login"); // "login" or "register"
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center bg-white">
+    <div
+      className="relative min-h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat"
+      style={{ backgroundImage: `url(${banner})` }}   // ← BACKGROUND UPDATED
+    >
       {/* Background tiles */}
       <div
         className="absolute inset-0 -z-10
